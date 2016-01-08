@@ -32,7 +32,7 @@ Servlet中的这句代码会把要输出的”中国”写到response对象中�
 web服务器会查询response码表把对">
 <meta property="og:image" content="http://qmh2014.github.io/assets/0108_01.png">
 <meta property="og:image" content="http://qmh2014.github.io/assets/0108_02.png">
-<meta property="og:updated_time" content="2016-01-08T08:36:27.264Z">
+<meta property="og:updated_time" content="2016-01-08T08:41:09.374Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Servlet中文乱码问题">
 <meta name="twitter:description" content="1、response输出中文问题首先先看如下代码：
@@ -196,7 +196,8 @@ web服务器会查询response码表把对">
 <li>web浏览器根据相应的编码解析出字符。</li>
 </ol>
 <p><strong> 因此，需要修改response码表，以及通知浏览器以何种编码打开， </strong>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//修改response的码表，通知服务器以UTF-8的格式去response对象中取数据，并写给客户机</span></span><br><span class="line">response.setCharacterEncoding(<span class="string">"UTF-8"</span>);</span><br><span class="line"><span class="comment">//通知浏览器以UTF-8的格式打开回送的数据</span></span><br><span class="line">response.setContentType(<span class="string">"text/html;charset=UTF-8"</span>);</span><br><span class="line">response.getWriter().write(<span class="string">"中国"</span>);</span><br></pre></td></tr></table></figure></p>
-<h2 id="2_u3001request_u63D0_u4EA4_u4E2D_u6587_u6570_u636E_u95EE_u9898"><a href="#2_u3001request_u63D0_u4EA4_u4E2D_u6587_u6570_u636E_u95EE_u9898" class="headerlink" title="2、request提交中文数据问题"></a>2、request提交中文数据问题</h2><p><strong> 2.1 POST方法提交数据 </strong><br>先看如下代码：<br><strong> jsp页面代码: </strong></p>
+<h2 id="2_u3001request_u63D0_u4EA4_u4E2D_u6587_u6570_u636E_u95EE_u9898"><a href="#2_u3001request_u63D0_u4EA4_u4E2D_u6587_u6570_u636E_u95EE_u9898" class="headerlink" title="2、request提交中文数据问题"></a>2、request提交中文数据问题</h2><p><strong> 2.1 POST方法提交数据 </strong></p>
+<p>先看如下代码：<br><strong> jsp页面代码: </strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;form method=<span class="string">"GET"</span> action=<span class="string">"/day05/servlet/LoginServlet"</span>&gt;</span><br><span class="line">    用户名：&lt;input <span class="built_in">type</span>=<span class="string">"text"</span> name=<span class="string">"user"</span>&gt;</span><br><span class="line">    密码：&lt;input <span class="built_in">type</span>=<span class="string">"password"</span> name=<span class="string">"password"</span>/&gt;</span><br><span class="line">    &lt;input <span class="built_in">type</span>=<span class="string">"submit"</span> value=<span class="string">"登录"</span>/&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
 <p><strong> LoginServlet代码：</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String username=request.getParameter(<span class="string">"user"</span>);</span><br><span class="line">System.out.println(username);</span><br></pre></td></tr></table></figure></p>
 <p>控制台打印出乱码数据。出现乱码的原因如下图2：<br><img src="http://qmh2014.github.io/assets/0108_02.png" alt="response乱码图"></p>
@@ -240,7 +241,7 @@ web服务器会查询response码表把对">
 <div class="share_jia">
 	<!-- JiaThis Button BEGIN -->
 	<div class="jiathis_style">
-		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<span class="jiathis_txt">分享到: &nbsp; </span>
 		<a class="jiathis_button_facebook"></a> 
     <a class="jiathis_button_twitter"></a>
     <a class="jiathis_button_plus"></a> 
