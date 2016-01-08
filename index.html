@@ -149,6 +149,34 @@
 <p>response.getWriter().write(“中国”);</p>
 </blockquote>
 <p>浏览器中出现乱码，而不是中国，出现该乱码的主要原因如下图1：<br><img src="http://qmh2014.github.io/assets/0108_01.png" alt="response乱码图"></p>
+<p><strong> 实现过程如下：</strong></p>
+<ol>
+<li>浏览器访问某个servlet;</li>
+<li>Servlet中的这句代码会把要输出的”中国”写到response对象中，且默认的response码表是ISO8859</li>
+<li>web服务器会查询response码表把对象中的”中国”，转化成码表中对应的数字，并写给web浏览器。</li>
+<li>web浏览器根据相应的编码解析出字符。</li>
+</ol>
+<p><strong> 因此，需要修改response码表，以及通知浏览器以何种编码打开， </strong>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//修改response的码表，通知服务器以UTF-8的格式去response对象中取数据，并写给客户机</span></span><br><span class="line">response.setCharacterEncoding(<span class="string">"UTF-8"</span>);</span><br><span class="line"><span class="comment">//通知浏览器以UTF-8的格式打开回送的数据</span></span><br><span class="line">response.setContentType(<span class="string">"text/html;charset=UTF-8"</span>);</span><br><span class="line">response.getWriter().write(<span class="string">"中国"</span>);</span><br></pre></td></tr></table></figure></p>
+<h2 id="2_u3001request_u63D0_u4EA4_u4E2D_u6587_u6570_u636E_u95EE_u9898"><a href="#2_u3001request_u63D0_u4EA4_u4E2D_u6587_u6570_u636E_u95EE_u9898" class="headerlink" title="2、request提交中文数据问题"></a>2、request提交中文数据问题</h2><p><strong> 2.1 POST方法提交数据 </strong><br>先看如下代码：<br><strong> jsp页面代码: </strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;form method=<span class="string">"GET"</span> action=<span class="string">"/day05/servlet/LoginServlet"</span>&gt;</span><br><span class="line">    用户名：&lt;input <span class="built_in">type</span>=<span class="string">"text"</span> name=<span class="string">"user"</span>&gt;</span><br><span class="line">    密码：&lt;input <span class="built_in">type</span>=<span class="string">"password"</span> name=<span class="string">"password"</span>/&gt;</span><br><span class="line">    &lt;input <span class="built_in">type</span>=<span class="string">"submit"</span> value=<span class="string">"登录"</span>/&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+<p><strong> LoginServlet代码：</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String username=request.getParameter(<span class="string">"user"</span>);</span><br><span class="line">System.out.println(username);</span><br></pre></td></tr></table></figure></p>
+<p>控制台打印出乱码数据。出现乱码的原因如下图2：<br><img src="http://qmh2014.github.io/assets/0108_02.png" alt="response乱码图"></p>
+<p><strong> 实现过程如下：</strong></p>
+<ol>
+<li>浏览器输入表单内容，先查询浏览器的编码，一般在jsp页面中会指定编码，如UTF-8<br>假设查到后对应的编码分别为：中-&gt;98 国-&gt;99;</li>
+<li>web服务器会把上面查到的98 99写到request对象中;</li>
+<li>调用getParameter方法的时候，会根据request对象里的98 99查询码表对应的字符，默认的玛表是ISO8859，需要修改码表为UTF-8;</li>
+<li>web浏览器根据相应的编码解析出字符。</li>
+</ol>
+<p><strong> 因此解决的代码如下： </strong></p>
+<blockquote>
+<p>request.setCharacterEncoding(“UTF-8”);<br>String username=request.getParameter(“user”);<br>System.out.println(username);</p>
+</blockquote>
+<p><strong> 2.2 GET方法提交数据 </strong></p>
+<p>假设在上述图中的第3步，根据ISO8859查到了 98  99对应的字符写给了username,<br>但是并不是我们想要的，需要再次根据username里的字符，再去反过来查找ISO8859查找到对应的数字 98  99,再以UTF-8的编码格式转成字符中国；<br>代码如下：</p>
+<blockquote>
+<p>String username = request.getParameter(“user”);<br>username = new String(username.getBytes(“ISO8859-1”), “UTF-8”);</p>
+</blockquote>
 
       
     </div>
